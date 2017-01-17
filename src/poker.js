@@ -42,6 +42,10 @@ function cardRanks(hand) {
     .map(card => parseInt('--23456789TJQKA'.indexOf(card.charAt(0))), 10)
     .sort((a, b) => a < b);
 
+  const fiveHighStraightRank = [ 14, 5, 4, 3, 2 ];
+  if (ranks.join(',') === fiveHighStraightRank.join(','))
+    return [ 5, 4, 3, 2, 1 ];
+
   return ranks;
 }
 

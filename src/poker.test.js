@@ -6,6 +6,7 @@ const fourOfAKindNines = '9D 9H 9S 9C 7D'.split(' ');
 const fullHouseTensOverSevens = 'TD TC TH 7C 7D'.split(' ');
 const kingHighFlush = 'KA 7A 5A QA 3A'.split(' ');
 const sixHighStraight = '2C 3C 4C 5S 6S'.split(' ');
+const fiveHighStraight = 'AS 2S 3S 4S 5C'.split(' ');
 const threeOfAKindTwos = '2C 2S 2A 7C 4A'.split(' ');
 const twoPairNineFive = '5S 5D 9H 9C 6S'.split(' ');
 const onePairFours = '4A 4S AA KA QS'.split(' ');
@@ -60,6 +61,7 @@ describe('cardRanks', () => {
     expect(cardRanks(fullHouseTensOverSevens)).toEqual([ 10, 10, 10, 7, 7 ]);
     expect(cardRanks(kingHighFlush)).toEqual([ 13, 12, 7, 5, 3 ]);
     expect(cardRanks(sixHighStraight)).toEqual([ 6, 5, 4, 3, 2 ]);
+    expect(cardRanks(fiveHighStraight)).toEqual([ 5, 4, 3, 2, 1 ]);
     expect(cardRanks(threeOfAKindTwos)).toEqual([ 7, 4, 2, 2, 2 ]);
     expect(cardRanks(twoPairNineFive)).toEqual([ 9, 9, 6, 5, 5 ]);
     expect(cardRanks(onePairFours)).toEqual([ 14, 13, 12, 4, 4 ]);
@@ -75,6 +77,7 @@ describe('handRank', () => {
     expect(handRank(fullHouseTensOverSevens)).toEqual([ 6, 10, 7 ]);
     expect(handRank(kingHighFlush)).toEqual([ 5, 13, 12, 7, 5, 3 ]);
     expect(handRank(sixHighStraight)).toEqual([ 4, 6 ]);
+    expect(handRank(fiveHighStraight)).toEqual([ 4, 5 ]);
     expect(handRank(threeOfAKindTwos)).toEqual([ 3, 2, 7, 4, 2, 2, 2 ]);
     expect(handRank(twoPairNineFive)).toEqual([ 2, 9, 5, 9, 9, 6, 5, 5 ]);
     expect(handRank(onePairFours)).toEqual([ 1, 4, 14, 13, 12, 4, 4 ]);
@@ -93,6 +96,7 @@ describe('play', () => {
         fullHouseTensOverSevens,
         kingHighFlush,
         sixHighStraight,
+        fiveHighStraight,
         threeOfAKindTwos,
         twoPairNineFive,
         onePairFours,
