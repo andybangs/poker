@@ -73,7 +73,17 @@ function handRank(hand) {
 }
 
 function play(hands) {
-  return hands.reduce((a, b) => handRank(a) > handRank(b) ? a : b);
+  return hands
+    .map(hand => [ hand ])
+    .reduce((a, b) => {
+      const rankAStr = handRank(a[0]).join(',');
+      const rankBStr = handRank(b[0]).join(',');
+
+      if (rankAStr === rankBStr)
+        return a.concat(b);
+
+      return rankAStr > rankBStr ? a : b;
+    });
 }
 
 module.exports = { straight, flush, kind, twoPair, cardRanks, handRank, play };

@@ -87,7 +87,7 @@ describe('handRank', () => {
 });
 
 describe('play', () => {
-  it('should return the winning hand given an array of hands', () => {
+  it('should return an array of winning hands given an array of hands', () => {
     // ten hands
     expect(
       play([
@@ -103,16 +103,16 @@ describe('play', () => {
         aceHigh,
         sevenHigh
       ])
-    ).toEqual(tenHighStraightFlush);
+    ).toEqual([ tenHighStraightFlush ]);
     // two equal hands
     expect(
       play([ fullHouseTensOverSevens, fullHouseTensOverSevens ])
-    ).toEqual(fullHouseTensOverSevens);
+    ).toEqual([ fullHouseTensOverSevens, fullHouseTensOverSevens ]);
     // one hand
-    expect(play([ kingHighFlush ])).toEqual(kingHighFlush);
+    expect(play([ kingHighFlush ])).toEqual([ kingHighFlush ]);
     // one hundred hands
     expect(
       play([ onePairFours ].concat(Array.of(99).fill(aceHigh)))
-    ).toEqual(onePairFours);
+    ).toEqual([ onePairFours ]);
   });
 });
