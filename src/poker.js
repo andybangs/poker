@@ -1,5 +1,5 @@
 const util = require('./util');
-const { max, min } = util;
+const { max, min, shuffle } = util;
 
 function straight(ranks) {
   return max(ranks) - min(ranks) === 4 && new Set(ranks).size === 5;
@@ -86,4 +86,41 @@ function play(hands) {
     });
 }
 
-module.exports = { straight, flush, kind, twoPair, cardRanks, handRank, play };
+function sortedDeck() {
+  const suits = 'C D H S'.split(' ');
+  const ranks = '2 3 4 5 6 7 8 9 T J Q K A'.split(' ');
+  return suits.reduce(
+    (deck, suit) => {
+      return deck.concat(ranks.map(rank => rank + suit));
+    },
+    []
+  );
+}
+
+function deal(numHands, handSize = 5, deck = sortedDeck()) {
+  if (numHands * handSize > deck.length)
+    throw new Error('Not enough cards in deck');
+
+  const shuffledDeck = shuffle(deck);
+  const hands = Array(numHands).fill(null).map(_ => Array(handSize).fill(null));
+
+  for (let i = 0; i < numHands; i++) {
+    for (let j = 0; j < handSize; j++) {
+      hands[i][j] = shuffledDeck.shift();
+    }
+  }
+
+  return hands;
+}
+
+module.exports = {
+  straight,
+  flush,
+  kind,
+  twoPair,
+  cardRanks,
+  handRank,
+  play,
+  sortedDeck,
+  deal
+};

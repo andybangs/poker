@@ -1,15 +1,28 @@
 const poker = require('./poker');
-const { straight, flush, kind, twoPair, cardRanks, handRank, play } = poker;
+const {
+  straight,
+  flush,
+  kind,
+  twoPair,
+  cardRanks,
+  handRank,
+  play,
+  sortedDeck,
+  deal
+} = poker;
 
+const deck = '2C 3C 4C 5C 6C 7C 8C 9C TC JC QC KC AC 2D 3D 4D 5D 6D 7D 8D 9D TD JD QD KD AD 2H 3H 4H 5H 6H 7H 8H 9H TH JH QH KH AH 2S 3S 4S 5S 6S 7S 8S 9S TS JS QS KS AS'.split(
+  ' '
+);
 const tenHighStraightFlush = '6C 7C 8C 9C TC'.split(' ');
 const fourOfAKindNines = '9D 9H 9S 9C 7D'.split(' ');
 const fullHouseTensOverSevens = 'TD TC TH 7C 7D'.split(' ');
-const kingHighFlush = 'KA 7A 5A QA 3A'.split(' ');
+const kingHighFlush = 'KH 7H 5H QH 3H'.split(' ');
 const sixHighStraight = '2C 3C 4C 5S 6S'.split(' ');
 const fiveHighStraight = 'AS 2S 3S 4S 5C'.split(' ');
-const threeOfAKindTwos = '2C 2S 2A 7C 4A'.split(' ');
+const threeOfAKindTwos = '2C 2S 2H 7C 4H'.split(' ');
 const twoPairNineFive = '5S 5D 9H 9C 6S'.split(' ');
-const onePairFours = '4A 4S AA KA QS'.split(' ');
+const onePairFours = '4A 4S AH KA QS'.split(' ');
 const aceHigh = 'AS 2S 3S 4S 6C'.split(' ');
 const sevenHigh = '2S 3S 4S 6C 7D'.split(' ');
 
@@ -114,5 +127,35 @@ describe('play', () => {
     expect(
       play([ onePairFours ].concat(Array.of(99).fill(aceHigh)))
     ).toEqual([ onePairFours ]);
+  });
+});
+
+describe('sortedDeck', () => {
+  it('should return an array representing a sorted deck', () => {
+    expect(sortedDeck()).toEqual(deck);
+  });
+
+  it('should contain 52 cards', () => {
+    expect(sortedDeck()).toHaveLength(52);
+  });
+});
+
+describe('deal', () => {
+  it('should return an array of length `numHands`', () => {
+    expect(deal(4)).toHaveLength(4);
+  });
+
+  it('should return an array with elements of length `handSize`', () => {
+    deal(4).forEach(hand => expect(hand).toHaveLength(5));
+  });
+
+  it('should return an array of hands such that no two hands are equal', () => {
+    const hands = deal(2, 26);
+    expect(hands[0]).not.toEqual(hands[1]);
+  });
+
+  it('should throw if cards needed exceed size of deck', () => {
+    expect(() => deal(8, 7)).toThrow();
+    expect(() => deal(7, 7)).not.toThrow();
   });
 });
