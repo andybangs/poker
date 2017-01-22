@@ -1,5 +1,28 @@
 const util = require('./util');
-const { max, min, shuffle } = util;
+const { combinations, max, min, shuffle } = util;
+
+describe('combinations', () => {
+  it('should return k-sized combinations of elements in a set', () => {
+    expect(combinations([ 1, 2, 3 ], 1)).toEqual([ [ 1 ], [ 2 ], [ 3 ] ]);
+
+    expect(
+      combinations([ 1, 2, 3 ], 2)
+    ).toEqual([ [ 1, 2 ], [ 1, 3 ], [ 2, 3 ] ]);
+
+    expect(combinations([ 1, 2, 3 ], 3)).toEqual([ [ 1, 2, 3 ] ]);
+  });
+
+  it(
+    'should return an empty array if k is greater than the number of elements in the set',
+    () => {
+      expect(combinations([ 1, 2, 3 ], 4)).toEqual([]);
+    }
+  );
+
+  it('should return an empty array if k is less than 0', () => {
+    expect(combinations([ 1, 2, 3 ], -1)).toEqual([]);
+  });
+});
 
 describe('max', () => {
   it('should return the max value in a given array', () => {

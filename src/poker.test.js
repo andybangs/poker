@@ -8,7 +8,8 @@ const {
   handRank,
   play,
   sortedDeck,
-  deal
+  deal,
+  bestHand
 } = poker;
 
 const deck = '2C 3C 4C 5C 6C 7C 8C 9C TC JC QC KC AC 2D 3D 4D 5D 6D 7D 8D 9D TD JD QD KD AD 2H 3H 4H 5H 6H 7H 8H 9H TH JH QH KH AH 2S 3S 4S 5S 6S 7S 8S 9S TS JS QS KS AS'.split(
@@ -45,8 +46,9 @@ describe('flush', () => {
 });
 
 describe('kind', () => {
-  it('should return the highest n-of-a-kind rank or false if none exist', () =>
-    {
+  it(
+    'should return the highest n-of-a-kind rank or false if none exist',
+    () => {
       expect(kind(4, [ 12, 12, 12, 12, 1 ])).toBe(12);
       expect(kind(3, [ 12, 12, 12, 12, 1 ])).toBe(false);
       expect(kind(2, [ 12, 12, 12, 12, 1 ])).toBe(false);
@@ -54,7 +56,8 @@ describe('kind', () => {
       expect(kind(3, [ 3, 3, 3, 2, 1 ])).toBe(3);
       expect(kind(2, [ 4, 4, 3, 2, 2 ])).toBe(4);
       expect(kind(2, [ 2, 2, 3, 4, 4 ])).toBe(4);
-    });
+    }
+  );
 });
 
 describe('twoPair', () => {
@@ -157,5 +160,34 @@ describe('deal', () => {
   it('should throw if cards needed exceed size of deck', () => {
     expect(() => deal(8, 7)).toThrow();
     expect(() => deal(7, 7)).not.toThrow();
+  });
+});
+
+describe('bestHand', () => {
+  it('should return the best five-card hand', () => {
+    expect(
+      bestHand([ '4C', '5C' ].concat(tenHighStraightFlush))
+    ).toEqual(tenHighStraightFlush);
+
+    expect(
+      bestHand([ '4C', '5C' ].concat(fourOfAKindNines))
+    ).toEqual(fourOfAKindNines);
+
+    expect(
+      bestHand(fullHouseTensOverSevens.concat([ 'AH', 'KH' ]))
+    ).toEqual(fullHouseTensOverSevens);
+
+    expect(
+      bestHand(
+        kingHighFlush
+          .slice(0, 2)
+          .concat([ 'AC', 'AS' ])
+          .concat(kingHighFlush.slice(2))
+      )
+    ).toEqual(kingHighFlush);
+
+    expect(
+      bestHand(sixHighStraight.concat([ 'AH', 'AS' ]))
+    ).toEqual(sixHighStraight);
   });
 });

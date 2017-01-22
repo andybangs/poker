@@ -1,5 +1,5 @@
 const util = require('./util');
-const { max, min, shuffle } = util;
+const { combinations, max, min, shuffle } = util;
 
 function straight(ranks) {
   return max(ranks) - min(ranks) === 4 && new Set(ranks).size === 5;
@@ -19,8 +19,7 @@ function kind(n, ranks) {
   );
 
   for (const key of Object.keys(rankCounts).sort((a, b) => a < b)) {
-    if (rankCounts[key] === n)
-      return parseInt(key, 10);
+    if (rankCounts[key] === n) return parseInt(key, 10);
   }
 
   return false;
@@ -52,37 +51,41 @@ function cardRanks(hand) {
 function handRank(hand) {
   const ranks = cardRanks(hand);
 
-  if (straight(ranks) && flush(hand))
+  if (straight(ranks) && flush(hand)) {
     return [ 8, max(ranks) ];
-  else if (kind(4, ranks))
+  } else if (kind(4, ranks)) {
     return [ 7, kind(4, ranks), kind(1, ranks) ];
-  else if (kind(3, ranks) && kind(2, ranks))
+  } else if (kind(3, ranks) && kind(2, ranks)) {
     return [ 6, kind(3, ranks), kind(2, ranks) ];
-  else if (flush(hand))
+  } else if (flush(hand)) {
     return [ 5 ].concat(ranks);
-  else if (straight(ranks))
+  } else if (straight(ranks)) {
     return [ 4, max(ranks) ];
-  else if (kind(3, ranks))
+  } else if (kind(3, ranks)) {
     return [ 3, kind(3, ranks) ].concat(ranks);
-  else if (twoPair(ranks))
+  } else if (twoPair(ranks)) {
     return [ 2 ].concat(twoPair(ranks)).concat(ranks);
-  else if (kind(2, ranks))
+  } else if (kind(2, ranks)) {
     return [ 1, kind(2, ranks) ].concat(ranks);
-  else
+  } else {
     return [ 0 ].concat(ranks);
+  }
 }
 
 function play(hands) {
   return hands
     .map(hand => [ hand ])
     .reduce((a, b) => {
-      const rankAStr = handRank(a[0]).join(',');
-      const rankBStr = handRank(b[0]).join(',');
+      const aRank = handRank(a[0]);
+      const bRank = handRank(b[0]);
+      const len = Math.min(aRank.length, bRank.length);
 
-      if (rankAStr === rankBStr)
-        return a.concat(b);
+      for (let i = 0; i < len; i++) {
+        if (aRank[i] > bRank[i]) return a;
+        if (aRank[i] < bRank[i]) return b;
+      }
 
-      return rankAStr > rankBStr ? a : b;
+      return [ a[0], b[0] ];
     });
 }
 
@@ -113,6 +116,10 @@ function deal(numHands, handSize = 5, deck = sortedDeck()) {
   return hands;
 }
 
+function bestHand(hand) {
+  return combinations(hand, 5).reduce((a, b) => play([ a, b ])[0]);
+}
+
 module.exports = {
   straight,
   flush,
@@ -122,5 +129,6 @@ module.exports = {
   handRank,
   play,
   sortedDeck,
-  deal
+  deal,
+  bestHand
 };
