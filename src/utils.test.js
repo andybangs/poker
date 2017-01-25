@@ -1,5 +1,5 @@
-const util = require('./util');
-const { combinations, max, min, shuffle } = util;
+const utils = require('./utils');
+const { combinations, product, hasDuplicates, max, min, shuffle } = utils;
 
 describe('combinations', () => {
   it('should return k-sized combinations of elements in a set', () => {
@@ -21,6 +21,30 @@ describe('combinations', () => {
 
   it('should return an empty array if k is less than 0', () => {
     expect(combinations([ 1, 2, 3 ], -1)).toEqual([]);
+  });
+});
+
+describe('product', () => {
+  it('should return the Cartesian product of input arrays', () => {
+    expect(
+      product([ 1, 2 ], [ 3, 4 ])
+    ).toEqual([ [ 1, 3 ], [ 1, 4 ], [ 2, 3 ], [ 2, 4 ] ]);
+
+    expect(
+      product([ 1 ], [ 2, 3 ], [ 'a', 'b' ])
+    ).toEqual([ [ 1, 2, 'a' ], [ 1, 2, 'b' ], [ 1, 3, 'a' ], [ 1, 3, 'b' ] ]);
+  });
+});
+
+describe('hasDuplicates', () => {
+  it('should return true if array has repeated elements', () => {
+    expect(hasDuplicates([ 1, 2, 3, 4, 4 ])).toBe(true);
+    expect(hasDuplicates([ 'one', 'two', 'three', 'four', 'four' ])).toBe(true);
+  });
+
+  it('should return false if array has norepeated elements', () => {
+    expect(hasDuplicates([ 1, 2, 3, 4 ])).toBe(false);
+    expect(hasDuplicates([ 'one', 'two', 'three', 'four' ])).toBe(false);
   });
 });
 

@@ -1,5 +1,8 @@
-const util = require('./util');
-const { combinations, max, min, shuffle } = util;
+const utils = require('./utils');
+const deck = require('./deck');
+
+const { combinations, product, hasDuplicates, max, min, shuffle } = utils;
+const { sortedDeck, redCards, blackCards } = deck;
 
 function straight(ranks) {
   return max(ranks) - min(ranks) === 4 && new Set(ranks).size === 5;
@@ -89,17 +92,6 @@ function play(hands) {
     });
 }
 
-function sortedDeck() {
-  const suits = 'C D H S'.split(' ');
-  const ranks = '2 3 4 5 6 7 8 9 T J Q K A'.split(' ');
-  return suits.reduce(
-    (deck, suit) => {
-      return deck.concat(ranks.map(rank => rank + suit));
-    },
-    []
-  );
-}
-
 function deal(numHands, handSize = 5, deck = sortedDeck()) {
   if (numHands * handSize > deck.length)
     throw new Error('Not enough cards in deck');
@@ -120,6 +112,18 @@ function bestHand(hand) {
   return combinations(hand, 5).reduce((a, b) => play([ a, b ])[0]);
 }
 
+function bestWildHand(hand) {
+  return play(
+    product(...hand.map(card => replacements(card))).map(hand => bestHand(hand))
+  ).filter(arr => !hasDuplicates(arr))[0];
+}
+
+function replacements(card) {
+  if (card === '?R') return redCards();
+  if (card === '?B') return blackCards();
+  return [ card ];
+}
+
 module.exports = {
   straight,
   flush,
@@ -128,7 +132,7 @@ module.exports = {
   cardRanks,
   handRank,
   play,
-  sortedDeck,
   deal,
-  bestHand
+  bestHand,
+  bestWildHand
 };

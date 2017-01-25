@@ -22,6 +22,20 @@ function combinations(arr, k) {
   return combs;
 }
 
+// http://stackoverflow.com/a/36234242
+function product(...args) {
+  return [ ...args ].reduce(
+    (a, b) => a
+      .map(x => b.map(y => x.concat(y)))
+      .reduce((a, b) => a.concat(b), []),
+    [ [] ]
+  );
+}
+
+function hasDuplicates(arr) {
+  return new Set(arr).size !== arr.length;
+}
+
 function max(arr) {
   return Math.max(...arr);
 }
@@ -46,4 +60,4 @@ function shuffle(arr) {
   return arrCopy;
 }
 
-module.exports = { combinations, max, min, shuffle };
+module.exports = { combinations, product, hasDuplicates, max, min, shuffle };
